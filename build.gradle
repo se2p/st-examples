@@ -1,0 +1,63 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'jacoco'
+}
+
+group 'de.uni_passau.fim.se2'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
+
+    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.5.2'
+}
+
+jacoco {
+    toolVersion = "0.8.4"
+    reportsDir = file("${buildDir}/jacoco")
+}
+
+jacocoTestReport {
+    reports {
+        csv.enabled = true
+        csv.setDestination(file("${buildDir}/jacoco/csv"))
+        html.enabled = true
+        html.setDestination(file("${buildDir}/jacoco/html"))
+        xml.enabled = false
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    jacoco {
+        enabled = true
+    }
+    finalizedBy jacocoTestReport
+}
+
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
